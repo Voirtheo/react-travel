@@ -3,8 +3,10 @@ import styles from './style.module.css'
 import logo from '../../assets/logo.svg';
 import { Layout, Typography, Input, Menu, Button, Dropdown, Space } from "antd"
 import { GlobalOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { useLocation, useParams, useMatch, useNavigate } from 'react-router-dom';
 
 export const Header: React.FC = () => {
+    const nagigate = useNavigate()
     const menuItems = [
         { label: '旅游首页', key: '1' },
         { label: '跟团游', key: '2' },
@@ -46,14 +48,17 @@ export const Header: React.FC = () => {
                             </a>
                         </Dropdown>
                         <div className={styles['button-group']}>
-                            <Button type='link' size='small'>注册</Button>
-                            <Button type='link' size='small'>登录</Button>
+                            <Button type='link' size='small' onClick={() => { nagigate('register') }}>注册</Button>
+                            <Button type='link' size='small' onClick={() => { nagigate('signIn') }}>登录</Button>
                         </div>
                     </div>
                 </div>
                 <Layout.Header className={styles['main-header']}>
-                    <img src={logo} alt="logo" className={styles['App-logo']} />
-                    <Typography.Title level={3} className={styles.title}>React 旅游网</Typography.Title>
+                    <span onClick={() => { nagigate('/') }}>
+                        <img src={logo} alt="logo" className={styles['App-logo']} />
+                        <Typography.Title level={3} className={styles.title}>React 旅游网</Typography.Title>
+                    </span>
+
                     <Input.Search
                         placeholder='请输入目的地、主题'
                         className={styles['search-input']}
@@ -64,8 +69,7 @@ export const Header: React.FC = () => {
                     className={styles['main-menu']}
                     items={menuItems} />
             </div>
-            
+
         </div>
     )
 }
-// export default Header;
