@@ -11,7 +11,6 @@ interface PropsType {
 }
 
 export const ProductImage: React.FC<PropsType> = ({ id, size, imageSrc, price, title}) => {
-    const nagigate = useNavigate()
     return (
         <Link to={`detail/${id}`}>
             {size === "large" ? (

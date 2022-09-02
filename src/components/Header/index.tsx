@@ -1,62 +1,91 @@
-import React from 'react'
+import React, { useTransition } from 'react'
 import styles from './style.module.css'
 import logo from '../../assets/logo.svg';
 import { Layout, Typography, Input, Menu, Button, Dropdown, Space } from "antd"
 import { GlobalOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { useLocation, useParams, useMatch, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { useSelector } from '../../redux/hooks'
+import { LanguageState } from "../../redux/language/languageReducer"
+import {
+    LanguageActionTypes,
+    addLanguageActionCreator,
+    changeLanguageActionCreator
+} from "../../redux/language/languageActions"
+import '../../i18n/configs';
+import {useTranslation} from 'react-i18next'
+
+interface State extends LanguageState { }
 
 export const Header: React.FC = () => {
     const nagigate = useNavigate()
+    const language = useSelector((state) => state.languageReducer.language)
+    const languageList = useSelector((state) => state.languageReducer.languageList)
+    const dispatch = useDispatch()
+    const { t, i18n } = useTranslation();
+
     const menuItems = [
-        { label: '旅游首页', key: '1' },
-        { label: '跟团游', key: '2' },
-        { label: '自由行', key: '3' },
-        { label: '私家团', key: '4' },
-        { label: '游轮', key: '5' },
-        { label: '酒店+景点', key: '6' },
-        { label: '当地玩乐', key: '7' },
-        { label: '主题游', key: '8' },
-        { label: '定制游', key: '9' },
-        { label: '游学', key: '10' },
-        { label: '签证', key: '11' },
-        { label: '企业游', key: '12' },
-        { label: '高端游', key: '13' },
-        { label: '爱玩户外', key: '14' },
-        { label: '保险', key: '15' },
-        { label: '周末游', key: '16' },
+        { label: t("header.home_page"), key: '1' },
+        { label: t("header.weekend"), key: '2' },
+        { label: t("header.group"), key: '3' },
+        { label: t("header.backpack"), key: '4' },
+        { label: t("header.private"), key: '5' },
+        { label: t("header.cruise"), key: '6' },
+        { label: t("header.hotel"), key: '7' },
+        { label: t("header.local"), key: '8' },
+        { label: t("header.theme"), key: '9' },
+        { label: t("header.custom"), key: '10' },
+        { label: t("header.study"), key: '11' },
+        { label: t("header.visa"), key: '12' },
+        { label: t("header.enterprise"), key: '13' },
+        { label: t("header.high_end"), key: '14' },
+        { label: t("header.outdoor"), key: '15' },
+        { label: t("header.insurance"), key: '16' },
     ]
+    const menuClickHandler = (e)=>{
+        console.log(e)
+        if(e.key==='new'){
+            //处理新语言添加action
+            dispatch(addLanguageActionCreator('新语言', 'new_language'))
+        }else{
+            dispatch(changeLanguageActionCreator(e.key))
+        }
+    }
+
+
     return (
         <div>
             <div className={styles['app-header']}>
                 <div className={styles['top-header']}>
                     <div className={styles.inner}>
-                        <Typography.Text style={{ fontSize: '12px', marginRight: '15px' }}>让旅游更幸福</Typography.Text>
+                        <Typography.Text style={{ fontSize: '12px', marginRight: '15px' }}>{t("header.slogan")}</Typography.Text>
                         <Dropdown
                             overlay={
-                                <Menu items={[
-                                    { label: '中文', key: '1' },
-                                    { label: 'English', key: '2' }
-                                ]} />
+                                <Menu
+                                    onClick={menuClickHandler}
+                                    items={languageList.map(l => {
+                                        return { label: l.name, key: l.code }
+                                    })} />
                             }
                         >
                             <a onClick={e => e.preventDefault()}>
                                 <Space>
                                     <GlobalOutlined />
-                                    Language
+                                    {language === 'zh' ? '中文' : 'English'}
                                     <CaretDownOutlined />
                                 </Space>
                             </a>
                         </Dropdown>
                         <div className={styles['button-group']}>
-                            <Button type='link' size='small' onClick={() => { nagigate('register') }}>注册</Button>
-                            <Button type='link' size='small' onClick={() => { nagigate('signIn') }}>登录</Button>
+                            <Button type='link' size='small' onClick={() => { nagigate('register') }}>{t("header.register")}</Button>
+                            <Button type='link' size='small' onClick={() => { nagigate('signIn') }}>{t("header.signIn")}</Button>
                         </div>
                     </div>
                 </div>
                 <Layout.Header className={styles['main-header']}>
                     <span onClick={() => { nagigate('/') }}>
                         <img src={logo} alt="logo" className={styles['App-logo']} />
-                        <Typography.Title level={3} className={styles.title}>React 旅游网</Typography.Title>
+                        <Typography.Title level={3} className={styles.title}>{t("header.title")}</Typography.Title>
                     </span>
 
                     <Input.Search
