@@ -1,26 +1,24 @@
-import React, { useTransition } from 'react'
-import styles from './style.module.css'
-import logo from '../../assets/logo.svg';
+import React from 'react'
 import { Layout, Typography, Input, Menu, Button, Dropdown, Space } from "antd"
 import { GlobalOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux'
 import { useSelector } from '../../redux/hooks'
-import { LanguageState } from "../../redux/language/languageReducer"
 import {
-    LanguageActionTypes,
     addLanguageActionCreator,
     changeLanguageActionCreator
 } from "../../redux/language/languageActions"
-import '../../i18n/configs';
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import styles from './style.module.css'
+import logo from '../../assets/logo.svg';
 
-interface State extends LanguageState { }
+
+
 
 export const Header: React.FC = () => {
     const nagigate = useNavigate()
-    const language = useSelector((state) => state.languageReducer.language)
-    const languageList = useSelector((state) => state.languageReducer.languageList)
+    const language = useSelector((state) => state.language.language)
+    const languageList = useSelector((state) => state.language.languageList)
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation();
 
@@ -42,12 +40,12 @@ export const Header: React.FC = () => {
         { label: t("header.outdoor"), key: '15' },
         { label: t("header.insurance"), key: '16' },
     ]
-    const menuClickHandler = (e)=>{
-        console.log(e)
-        if(e.key==='new'){
+    const menuClickHandler = (e) => {
+        // console.log(e)
+        if (e.key === 'new') {
             //处理新语言添加action
             dispatch(addLanguageActionCreator('新语言', 'new_language'))
-        }else{
+        } else {
             dispatch(changeLanguageActionCreator(e.key))
         }
     }
@@ -63,9 +61,9 @@ export const Header: React.FC = () => {
                             overlay={
                                 <Menu
                                     onClick={menuClickHandler}
-                                    items={languageList.map(l => {
+                                    items={(languageList.map(l => {
                                         return { label: l.name, key: l.code }
-                                    })} />
+                                    })).concat({ label: "添加新语言", key: "new" })} />
                             }
                         >
                             <a onClick={e => e.preventDefault()}>
@@ -78,7 +76,7 @@ export const Header: React.FC = () => {
                         </Dropdown>
                         <div className={styles['button-group']}>
                             <Button type='link' size='small' onClick={() => { nagigate('register') }}>{t("header.register")}</Button>
-                            <Button type='link' size='small' onClick={() => { nagigate('signIn') }}>{t("header.signIn")}</Button>
+                            <Button type='link' size='small' onClick={() => { nagigate('signIn') }}>{t("header.signin")}</Button>
                         </div>
                     </div>
                 </div>

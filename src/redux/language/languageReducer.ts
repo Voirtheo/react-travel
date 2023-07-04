@@ -15,7 +15,7 @@ const defaultState: LanguageState = {
 };
 
 export default (state = defaultState, action) => {
-  console.log(action)
+  // console.log(action)
   switch (action.type) {
     case CHANGE_LANGUAGE:
       i18n.changeLanguage(action.payload); // 这样处理是不标准的，有副作用

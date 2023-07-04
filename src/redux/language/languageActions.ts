@@ -11,21 +11,16 @@ interface AddLanguageAction {
   payload: { name: string; code: string };
 }
 
-export type LanguageActionTypes = ChangeLanguageAction | AddLanguageAction;
+export type LanguageActionTypes = ChangeLanguageAction | AddLanguageAction;//可以是两者中的任意一个
 
-export const changeLanguageActionCreator = (
-  languageCode: "zh" | "en"
-): ChangeLanguageAction => {
+export const changeLanguageActionCreator = ( languageCode: "zh" | "en"): ChangeLanguageAction => {
   return {
     type: CHANGE_LANGUAGE,
     payload: languageCode,
   };
 };
 
-export const addLanguageActionCreator = (
-  name: string,
-  code: string
-): AddLanguageAction => {
+export const addLanguageActionCreator = (name: string, code: string): AddLanguageAction => {
   return {
     type: ADD_LANGUAGE,
     payload: { name, code },
